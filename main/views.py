@@ -13,27 +13,29 @@ class HabitCreateAPIView(generics.CreateAPIView):
     serializer_class = HabitSerializer
 
 
+
 class HabitListAPIView(generics.ListAPIView):
     """
     Эндпоинт по просмотру привычек
     """
-    serializer_class = HabitSerializer
     queryset = Habit.objects.all()
+    serializer_class = HabitSerializer
+
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):
     """
     Эндпоинт по просмотру привычки
     """
-    serializer_class = HabitSerializer
     queryset = Habit.objects.all()
+    serializer_class = HabitSerializer
 
 
 class HabitUpdateAPIView(generics.UpdateAPIView):
     """
     Эндпоинт по обновлению привычки
     """
-    serializer_class = HabitSerializer
     queryset = Habit.objects.all()
+    serializer_class = HabitSerializer
 
 
 class HabitDestroyAPIView(generics.DestroyAPIView):
