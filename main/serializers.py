@@ -15,7 +15,6 @@ class HabitCreateSerializer(serializers.ModelSerializer):
         fields = ['time', 'action', 'place','pleasant_habit','related_habit','periodicity','reward','time_to_complete','public']
 
 
-
     def create(self, validated_data):
         user = self.context['request'].user
         habit = Habit.objects.create(creator=user, **validated_data)
