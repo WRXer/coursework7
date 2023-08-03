@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+from main.validators import validate_related_habit_and_reward
 
 # Create your models here.
 NULLABLE = {'blank': True, 'null': True}
@@ -18,7 +19,11 @@ class Habit(models.Model):
     public = models.BooleanField(default=False)     #признак публичности(общий доступ)
 
     def __str__(self):
-        return str(self.action)
+        return self.action
+
+    def clean(self):
+        validate_related_habit_and_reward(self)
+
 
     class Meta:
         verbose_name = "привычка"

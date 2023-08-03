@@ -5,4 +5,6 @@ from main.models import Habit
 class HabitForm(forms.ModelForm):
     class Meta:
         model = Habit
-        fields = '__all__'
+        exclude = ['creator']
+
+        #fields = "__all__"
