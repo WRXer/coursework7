@@ -12,5 +12,11 @@ def validate_time_to_complete(value):
         raise ValidationError("Продолжительность не может быть больше 120 секунд.")
 
 def validate_reward(value):
-    if not value.related_habit and not value.reward:
-        raise ValidationError('При отсутствии связанной привычки, необходимо указать вознаграждение.')
+    if value.pleasant_habit is False:
+        if not value.related_habit and not value.reward:
+            raise ValidationError('При отсутствии связанной привычки(вознаграждения), необходимо указать вознаграждение(привычку).')
+
+def validate_habit(value):
+    if value.pleasant_habit is True:
+        if value.reward or value.related_habit:
+            raise ValidationError('Приятные привычки могут быть только без вознаграждения и приятной привычки')
