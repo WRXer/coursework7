@@ -1,10 +1,10 @@
-from django.shortcuts import render
 from rest_framework import generics
-
+from rest_framework.permissions import IsAuthenticated
 from main.models import Habit
 from main.pagination import HabitPaginator
+from main.permissions import IsCreatorOrStaff
 from main.serializers import HabitSerializer, HabitCreateSerializer
-from main.tasks import check_habit
+
 
 
 # Create your views here.
@@ -15,9 +15,10 @@ class HabitCreateAPIView(generics.CreateAPIView):
     queryset = Habit.objects.all()
     serializer_class = HabitCreateSerializer
 
+
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)
-        check_habit.delay()
+
 
 
 class HabitListAPIView(generics.ListAPIView):
@@ -28,6 +29,14 @@ class HabitListAPIView(generics.ListAPIView):
     serializer_class = HabitSerializer
     pagination_class = HabitPaginator
 
+    def get_queryset(self):
+        user = self.request.user
+        print(user)
+        if user.is_staff:
+            queryset = Habit.objects.all()
+        else:
+            queryset = Habit.objects.filter(creator=self.request.user)
+        return queryset
 
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):
@@ -36,6 +45,7 @@ class HabitRetrieveAPIView(generics.RetrieveAPIView):
     """
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
+    permission_classes = [IsCreatorOrStaff]
 
 
 class HabitUpdateAPIView(generics.UpdateAPIView):
@@ -60,4 +70,3 @@ class PublicHabitListAPIView(generics.ListAPIView):
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
     pagination_class = HabitPaginator
-

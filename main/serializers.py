@@ -6,7 +6,7 @@ from main.models import Habit
 class HabitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habit
-        fields = '__all__'
+        fields = ['id', 'creator', 'action', 'place']
 
 
 class HabitCreateSerializer(serializers.ModelSerializer):

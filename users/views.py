@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from users.models import User
-from users.serializer import UserCreateSerializer, UserSerializer
+from users.serializers import UserSerializer, UserCreateSerializer
 
 
 # Create your views here.
