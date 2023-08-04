@@ -2,7 +2,7 @@ from celery import shared_task
 from django.conf import settings
 import requests
 from django.utils import timezone
-import datetime
+from datetime import timedelta
 
 from main.models import Habit
 
@@ -40,5 +40,7 @@ def check_habit():
     for habit in habits_today:
         if habit.send_time.hour == current_time.hour and habit.send_time.minute == current_time.minute:
             send_message_tg(habit.creator.telegram_username, habit.time, habit.place, habit.action)
-            print("Время совпадает!")
+            new_send_date = habit.send_date + timedelta(days=habit.periodicity)    # Обновляем send_date у привычки
+            habit.send_date = new_send_date
+            habit.save()
 
