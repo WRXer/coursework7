@@ -8,6 +8,9 @@ from main.models import Habit
 
 
 def send_message_tg(telegram_username, time, place, action):
+    """
+    Функция отправки уведомления в телеграмм
+    """
     TOKEN = settings.TELEGRAM_BOT_TOKEN
     get_id_url = f'https://api.telegram.org/bot{TOKEN}/getUpdates'    # Получение chat_id по username
     response = requests.get(get_id_url)
@@ -32,13 +35,16 @@ def send_message_tg(telegram_username, time, place, action):
 
 @shared_task
 def check_habit():
+    """
+    Функция проверки даты и времени для отправки уведомления
+    """
     current_time = timezone.now().time()
     current_date = timezone.now().date()
     habits_today = Habit.objects.filter(
         send_date=current_date
     )
     for habit in habits_today:
-        if habit.send_time.hour == current_time.hour and habit.send_time.minute == current_time.minute:
+        if habit.send_time.hour <= current_time.hour and habit.send_time.minute <= current_time.minute:
             send_message_tg(habit.creator.telegram_username, habit.time, habit.place, habit.action)
             new_send_date = habit.send_date + timedelta(days=habit.periodicity)    # Обновляем send_date у привычки
             habit.send_date = new_send_date

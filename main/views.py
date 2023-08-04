@@ -52,6 +52,7 @@ class HabitDestroyAPIView(generics.DestroyAPIView):
     """
     serializer_class = HabitSerializer
 
+
 class PublicHabitListAPIView(generics.ListAPIView):
     """
     Эндпоинт по публичным привычкам
