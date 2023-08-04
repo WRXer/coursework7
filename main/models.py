@@ -1,8 +1,11 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 from main.validators import validate_related_habit_and_reward, validate_time_to_complete, validate_reward, \
     validate_habit, validate_periodicity
+import datetime
+
 
 # Create your models here.
 NULLABLE = {'blank': True, 'null': True}
@@ -10,6 +13,8 @@ NULLABLE = {'blank': True, 'null': True}
 class Habit(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="создатель привычки", related_name='habits_creator')
     place = models.CharField(max_length=100, verbose_name="место выполнения")    #место
+    send_time = models.TimeField(verbose_name='время отправки уведомления', default=datetime.time(8, 0))
+    send_date = models.DateField(verbose_name="дата выполнения", default=timezone.now)
     time = models.TimeField(verbose_name="время выполнения")   #время,когда выполнять
     action = models.CharField(max_length=200, verbose_name="действие")   #действие
     pleasant_habit = models.BooleanField(default=False, verbose_name="признак положительной привычки")     #признак положительной привычки
