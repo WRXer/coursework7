@@ -17,7 +17,7 @@ class IsCreatorOrStaff(permissions.BasePermission):
 
 class IsOwner(permissions.BasePermission):
     """
-    Доступ только владельцу
+    Доступ только владельцу.
     """
     def has_object_permission(self, request, view, obj):
         if request.user == obj.creator:
