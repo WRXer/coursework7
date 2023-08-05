@@ -157,12 +157,12 @@ AUTH_USER_MODEL= 'users.User'
 # URL-адрес брокера сообщений
 CELERY_BROKER_URL = 'redis://localhost:6379' # Например, Redis, который по умолчанию работает на порту 6379
 
-#CELERY_BEAT_SCHEDULE = {
-    #'check_habit': {
-    #    'task': 'main.tasks.check_habit',
-    #    'schedule': timedelta(minutes=1),  # Периодичность выполнения задачи (1 раз в день)
-    #},
-#}
+CELERY_BEAT_SCHEDULE = {
+    'check_habit': {
+        'task': 'main.tasks.check_habit',
+        'schedule': timedelta(minutes=1),  # Периодичность выполнения задачи (1 раз в день)
+    },
+}
 # URL-адрес брокера результатов, также Redis
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 

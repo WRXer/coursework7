@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
 from users.models import User
+from users.permissions import IsOwnerOrSuperuser
 from users.serializers import UserSerializer, UserCreateSerializer
 
 
@@ -15,6 +17,12 @@ class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            queryset = User.objects.all()
+        return queryset
+
 
 class UserDetailView(generics.RetrieveAPIView):
     """
@@ -22,6 +30,7 @@ class UserDetailView(generics.RetrieveAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsOwnerOrSuperuser]
 
 
 class UserUpdateView(generics.UpdateAPIView):
@@ -30,6 +39,7 @@ class UserUpdateView(generics.UpdateAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsOwnerOrSuperuser]
 
 
 class UserDeleteView(generics.DestroyAPIView):
@@ -38,6 +48,7 @@ class UserDeleteView(generics.DestroyAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [IsOwnerOrSuperuser]
 
 
 class UserCreateView(generics.CreateAPIView):
@@ -46,6 +57,7 @@ class UserCreateView(generics.CreateAPIView):
     """
     queryset = User.objects.all()
     serializer_class = UserCreateSerializer
+
 
     def post(self, request, *args, **kwargs):
         serializer = UserCreateSerializer(data=request.data)

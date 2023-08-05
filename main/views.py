@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from main.models import Habit
 from main.pagination import HabitPaginator
-from main.permissions import IsCreatorOrStaff
+from main.permissions import IsCreatorOrStaff, IsOwner
 from main.serializers import HabitSerializer, HabitCreateSerializer
 
 
@@ -14,11 +14,12 @@ class HabitCreateAPIView(generics.CreateAPIView):
     """
     queryset = Habit.objects.all()
     serializer_class = HabitCreateSerializer
-
+    permission_classes = [IsOwner]
 
     def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
-
+        new_habit = serializer.save()
+        new_habit.creator = self.request.user
+        new_habit.save()
 
 
 class HabitListAPIView(generics.ListAPIView):
@@ -31,7 +32,6 @@ class HabitListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        print(user)
         if user.is_staff:
             queryset = Habit.objects.all()
         else:
@@ -54,13 +54,16 @@ class HabitUpdateAPIView(generics.UpdateAPIView):
     """
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
+    permission_classes = [IsCreatorOrStaff]
 
 
 class HabitDestroyAPIView(generics.DestroyAPIView):
     """
     Эндпоинт по удалению привычки
     """
+    queryset = Habit.objects.all()
     serializer_class = HabitSerializer
+    permission_classes = [IsOwner]
 
 
 class PublicHabitListAPIView(generics.ListAPIView):
@@ -70,3 +73,7 @@ class PublicHabitListAPIView(generics.ListAPIView):
     queryset = Habit.objects.all()
     serializer_class = HabitSerializer
     pagination_class = HabitPaginator
+
+    def get_queryset(self):
+        publics = Habit.objects.filter(public=True)
+        return publics
