@@ -4,7 +4,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from users.apps import UsersConfig
 from users.views import UserListView, UserDetailView, UserUpdateView, UserDeleteView, UserCreateView
 
+
 app_name = UsersConfig.name
+
 
 urlpatterns = [
     path("", UserListView.as_view()),

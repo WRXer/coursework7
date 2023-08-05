@@ -4,6 +4,7 @@ from django.db import models
 
 NULLABLE = {'blank': True, 'null': True}
 
+
 # Create your models here.
 class UserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
@@ -28,7 +29,6 @@ class UserManager(BaseUserManager):
             raise ValueError('У суперпользователя должен быть is_staff=True')
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('У суперпользователя должен быть is_superuser=True')
-
         return self._create_user(email, password, **extra_fields)
 
 
@@ -39,10 +39,8 @@ class User(AbstractUser):
     name = models.CharField(max_length=100, verbose_name="имя пользователя", **NULLABLE)
     avatar = models.ImageField(upload_to='users/', verbose_name='аватар', **NULLABLE)
     is_active = models.BooleanField(default=True, verbose_name='подтверждение почты')
-
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
-
     objects = UserManager()
 
     class Meta:

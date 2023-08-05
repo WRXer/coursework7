@@ -13,8 +13,8 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
 
 class IsOwnerOrSuperuser(permissions.BasePermission):
+    """
+    Доступ только владельцу аккаунта или суперпользователю
+    """
     def has_object_permission(self, request, view, obj):
-        """
-        Доступ только владельцу аккаунта или суперпользователю
-        """
         return obj == request.user or request.user.is_superuser

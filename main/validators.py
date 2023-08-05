@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.core.exceptions import ValidationError
 
+
 def validate_related_habit_and_reward(value):
     """
     Исключить одновременный выбор связанной привычки и указания вознаграждения.

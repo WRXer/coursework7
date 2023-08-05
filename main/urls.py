@@ -4,8 +4,8 @@ from main.apps import MainConfig
 from main.views import HabitCreateAPIView, HabitListAPIView, HabitRetrieveAPIView, HabitUpdateAPIView, \
     HabitDestroyAPIView, PublicHabitListAPIView
 
-app_name = MainConfig.name
 
+app_name = MainConfig.name
 
 
 urlpatterns = [
