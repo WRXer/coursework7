@@ -103,8 +103,87 @@ class HabitTestCase(APITestCase):
             "related_habit": '',
             "periodicity": 1,
             "reward": "test",
-            "time_to_complete": '15:00:00',
+            "time_to_complete": 170,
             "public": 'False'
         }
         response = self.client.post(f'/habit/create/', data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['Продолжительность не может быть больше 120 секунд.']}
+        )
+
+    def test_validate_periodicity(self):
+        data = {
+            'creator': self.user.id,
+            "time": "15:00:00",
+            "action": "test",
+            "place": "test",
+            "pleasant_habit": 'False',
+            "related_habit": '',
+            "periodicity": 8,
+            "reward": "test",
+            "time_to_complete": 100,
+            "public": 'False'
+        }
+        response = self.client.post(f'/habit/create/', data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['Нельзя выполнять привычку реже, чем 1 раз в 7 дней']}
+        )
+
+    def test_validate_pleasant_habit(self):
+        data = {
+            'creator': self.user.id,
+            "time": "15:00:00",
+            "action": "test",
+            "place": "test",
+            "pleasant_habit": 'True',
+            "related_habit": '',
+            "periodicity": 1,
+            "reward": "test",
+            "time_to_complete": 100,
+            "public": 'False'
+        }
+        response = self.client.post(f'/habit/create/', data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['Приятные привычки могут быть только без вознаграждения и приятной привычки']}
+        )
+
+    def test_validate_reward_related_habit(self):
+        data_pleasant = {
+
+            'creator': self.user.id,
+            "time": "15:00:00",
+            "action": "test",
+            "place": "test",
+            "pleasant_habit": 'True',
+            "related_habit": "",
+            "periodicity": 1,
+            "reward": "",
+            "time_to_complete": 100,
+            "public": 'False'
+        }
+        data = {
+
+            'creator': self.user.id,
+            "time": "15:00:00",
+            "action": "test",
+            "place": "test",
+            "pleasant_habit": 'False',
+            "related_habit": 10,
+            "periodicity": 1,
+            "reward": "test",
+            "time_to_complete": 100,
+            "public": 'False'
+        }
+        self.client.post(f'/habit/create/', data_pleasant)
+        response = self.client.post(f'/habit/create/', data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            response.json(),
+            {'non_field_errors': ['Нельзя указывать одновременно связанную привычку и вознаграждение.']}
+        )

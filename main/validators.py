@@ -4,13 +4,6 @@ from django.core.exceptions import ValidationError
 
 
 
-def validate_related_habit_and_reward(value):
-    """
-    Исключить одновременный выбор связанной привычки и указания вознаграждения.
-    """
-    if value.related_habit and value.reward:
-        raise ValidationError('Нельзя указывать одновременно связанную привычку и вознаграждение.')
-
 class TimeCompleteValidator:
     """
     Время выполнения должно быть не больше 120 секунд.
@@ -47,6 +40,8 @@ class RewardValidator:
         if pleasant_habit is True:    #У приятной привычки не может быть вознаграждения или связанной привычки.
             if reward or related_habit:
                 raise ValidationError('Приятные привычки могут быть только без вознаграждения и приятной привычки')
+        if related_habit and reward:    #Исключить одновременный выбор связанной привычки и указания вознаграждения.
+            raise ValidationError('Нельзя указывать одновременно связанную привычку и вознаграждение.')
 
 
 class PeriodicityValidator:
