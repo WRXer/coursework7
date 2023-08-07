@@ -2,8 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 
-from main.validators import validate_related_habit_and_reward, validate_time_to_complete, validate_reward, \
-    validate_habit, validate_periodicity
 import datetime
 
 
@@ -27,12 +25,6 @@ class Habit(models.Model):
     def __str__(self):
         return self.action
 
-    def clean(self):
-        validate_related_habit_and_reward(self)
-        validate_time_to_complete(self)
-        validate_reward(self)
-        validate_habit(self)
-        validate_periodicity(self)
 
     class Meta:
         verbose_name = "привычка"

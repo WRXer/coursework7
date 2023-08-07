@@ -162,7 +162,7 @@ CELERY_BROKER_URL = 'redis://localhost:6379' # Например, Redis, кото
 CELERY_BEAT_SCHEDULE = {
     'check_habit': {
         'task': 'main.tasks.check_habit',
-        'schedule': timedelta(minutes=1),  # Периодичность выполнения задачи (1 раз в день)
+        'schedule': timedelta(seconds=10),  # Периодичность выполнения задачи (1 раз в день)
     },
 }
 # URL-адрес брокера результатов, также Redis
