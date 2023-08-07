@@ -36,14 +36,13 @@ class RewardValidator:
         self.field = field
 
     def __call__(self,data):
-
         pleasant_habit = data.get('pleasant_habit')
         related_habit = data.get('related_habit')
         reward = data.get('reward')
         if pleasant_habit is False:    #При отсутствии связанной привычки(вознаграждения), необходимо указать вознаграждение(привычку).
             if not related_habit and not reward:
                 raise ValidationError('При отсутствии связанной привычки(вознаграждения), необходимо указать вознаграждение(привычку).')
-        if related_habit and reward:    #    Исключить одновременный выбор связанной привычки и указания вознаграждения.
+        if related_habit and reward:    #Исключить одновременный выбор связанной привычки и указания вознаграждения.
             raise ValidationError('Нельзя указывать одновременно связанную привычку и вознаграждение.')
         if pleasant_habit is True:    #У приятной привычки не может быть вознаграждения или связанной привычки.
             if reward or related_habit:
