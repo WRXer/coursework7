@@ -5,7 +5,7 @@ services:
     image: postgres
     environment:
       POSTGRES_DB: ha_prj
-      POSTGRES_PASSWORD: 777Nokia13
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /var/lib/postgresql/data/pgdata
 
   redis:

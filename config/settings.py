@@ -109,7 +109,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ha_prj', # Название БД
         'USER': 'postgres', # Пользователь для подключения
-        'PASSWORD': '777Nokia13',    #os.getenv('DB_PASSWORD'), # Пароль для этого пользователя
+        'PASSWORD': os.getenv('DB_PASSWORD'), # Пароль для этого пользователя
         'HOST': 'db',
         'PORT': '5432',
     }
