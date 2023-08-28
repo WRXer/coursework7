@@ -1,20 +1,12 @@
 version: '3'
 
 services:
-
-
   db:
     image: postgres
-    container_name: db
     environment:
+      POSTGRES_DB: ha_prj
+      POSTGRES_PASSWORD: 777Nokia13
       PGDATA: /var/lib/postgresql/data/pgdata
-      POSTGRES_DB: db_prj
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/pgdata
-    ports:
-      - '5432:5432'
 
   redis:
     image: redis
@@ -32,15 +24,12 @@ services:
 
   app:
     build: .
-    container_name: app_container
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-    ports:
-      - '8000:8000'
     depends_on:
       - db
       - redis
-    volumes:
-      - ./.env:/app/.env
+    ports:
+      - '8000:8000'
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
   celery:
     build: .
