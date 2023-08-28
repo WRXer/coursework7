@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-62d$t^bpo$4*527tm^1s4lx7%9i@6elo12@+f34!4g5ylmx2j3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -109,7 +109,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ha_prj', # Название БД
         'USER': 'postgres', # Пользователь для подключения
-        'PASSWORD': os.getenv('DB_PASSWORD'), # Пароль для этого пользователя
+        'PASSWORD': 'password',    #os.getenv('DB_PASSWORD'), # Пароль для этого пользователя
+        'HOST': 'db',
+        'PORT': '5432',
     }
 }
 
@@ -148,6 +150,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT= os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -157,7 +160,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL= 'users.User'
 
 # URL-адрес брокера сообщений
-CELERY_BROKER_URL = 'redis://localhost:6379' # Например, Redis, который по умолчанию работает на порту 6379
+CELERY_BROKER_URL = 'redis://redis:6379/0' # Например, Redis, который по умолчанию работает на порту 6379
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 CELERY_BEAT_SCHEDULE = {
     'check_habit': {
@@ -165,8 +170,6 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': timedelta(seconds=10),  # Периодичность выполнения задачи (1 раз в день)
     },
 }
-# URL-адрес брокера результатов, также Redis
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 
 # Часовой пояс для работы Celery
 #CELERY_TIMEZONE = "Australia/Tasmania"
